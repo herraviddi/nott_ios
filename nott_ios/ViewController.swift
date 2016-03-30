@@ -10,7 +10,17 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    // MOCK DATA!
+    
+    var percentagePrediction = 0.741 as CGFloat!
+    
+    // END OF MOCK DATA!
+    
+    var circleDiagram = CircleDiagram()
+    
     var screenHeight:CGFloat!
+    
+    var predictionView:UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +31,15 @@ class ViewController: UIViewController {
         
         navbarSetup()
         mainUISetup()
+        predictionViewSetup()
     }
 
-    // UI Setup
+    // MARK: - UI Setup
+    
+    func mainUISetup(){
+        self.view.backgroundColor = UIColor.whiteColor()
+    }
+    
     func navbarSetup(){
         self.title = "Nótt"
         
@@ -54,18 +70,73 @@ class ViewController: UIViewController {
         self.navigationItem.leftBarButtonItem = leftBarButton
     }
     
-    func mainUISetup(){
-        self.view.backgroundColor = UIColor.whiteColor()
+    func predictionViewSetup(){
+        
+        let navigationBarHeight: CGFloat = self.navigationController!.navigationBar.frame.height
+        
+        // create a UIView as the container for the prediction header
+        predictionView = UIView()
+        predictionView.frame = CGRectMake(0, navigationBarHeight, self.view.frame.size.width, (self.view.frame.size.height/2) - navigationBarHeight)
+        
+        // Prediction header label
+        let predictionHeaderLabel = UILabel()
+        predictionHeaderLabel.text = "Sleep Quality Prediction"
+        predictionHeaderLabel.font = UIFont.systemFontOfSize(24.0, weight: UIFontWeightLight)
+        predictionHeaderLabel.textColor = Constants.AppColors.blueColor
+        predictionHeaderLabel.textAlignment = .Center
+        predictionHeaderLabel.frame = CGRectMake(0, 30, predictionView.frame.size.width, 40)
+        
+        predictionView.addSubview(predictionHeaderLabel)
+
+        
+        // use the diagram class I created and set the values for the circle diagram
+        circleDiagram.arcBackgroundColor = Constants.AppColors.graycolor
+        circleDiagram.backgroundColor = UIColor.clearColor()
+        circleDiagram.arcWidth = 35.0 // width of the diagmra
+        circleDiagram.endArc = percentagePrediction // the amount
+        circleDiagram.arcColor = Constants.AppColors.blueColor // the color of the diagram
+        circleDiagram.frame = CGRectMake((predictionView.frame.size.width/4), predictionView.frame.size.height/4, predictionView.frame.size.width/2, predictionView.frame.size.width/2)
+        
+        predictionView.addSubview(circleDiagram)
+        
+        // Percentage Label inside the diagram
+        let percentageLabel = UILabel()
+        percentageLabel.text = String(percentagePrediction*100) + "%"
+        percentageLabel.font = UIFont.systemFontOfSize(24.0, weight: UIFontWeightLight)
+        percentageLabel.textColor = Constants.AppColors.blueColor
+        percentageLabel.textAlignment = .Center
+        percentageLabel.frame = CGRectMake(predictionView.frame.size.width/2 - 40, predictionView.frame.size.height/2, 80, 40)
+        
+        predictionView.addSubview(percentageLabel)
+
+        
+        // Reason for prediction text
+        let reasonTextLabel = UILabel()
+        reasonTextLabel.text = "* Extensive iPad use within an hour before bedtime"
+        reasonTextLabel.font = UIFont.systemFontOfSize(12.0, weight: UIFontWeightLight)
+        reasonTextLabel.textColor = Constants.AppColors.redTextColor
+        reasonTextLabel.textAlignment = .Center
+        reasonTextLabel.frame = CGRectMake(0, predictionView.frame.size.height - 30, predictionView.frame.size.width, 40)
+        
+        predictionView.addSubview(reasonTextLabel)
+        
+        
+        
+        self.view.addSubview(predictionView)
     }
     
-    // Navigation Actions
+    
+    // MARK: - Navigation Actions
     func statsButtonPressed(){
+        print("stats button pressed")
         
     }
     
     func settingsButtonPressed(){
+        print("settings button pressed")
         
     }
+    
     
     
     override func didReceiveMemoryWarning() {

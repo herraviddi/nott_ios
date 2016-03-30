@@ -15,7 +15,8 @@ struct Constants {
     
     struct AppColors {
         static let blueColor = UIColor(red: 7.0/255, green: 156.0/255, blue: 211.0/255, alpha: 1.0)
-
+        static let graycolor = UIColor(red: 172.0/255, green: 172.0/255, blue: 172.0/255, alpha: 1.0)
+        static let redTextColor = UIColor(red: 211.0/255, green: 7.0/255, blue: 40.0/255, alpha: 1.0)
         
     }
     
