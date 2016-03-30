@@ -30,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.window?.rootViewController = nav;
         self.window?.makeKeyAndVisible();
+        
+        // set the color of the title text in the navbar
+        UINavigationBar.appearance().tintColor = Constants.AppColors.blueColor
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : Constants.AppColors.blueColor]
 
         return true
     }
