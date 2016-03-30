@@ -84,7 +84,6 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "Pods-nott_ios/AeroGearPush.framework"
   install_framework "Pods-nott_ios/Alamofire.framework"
   install_framework "Pods-nott_ios/Bolts.framework"
   install_framework "Pods-nott_ios/Charts.framework"
@@ -96,7 +95,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-nott_ios/SwiftyJSON.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "Pods-nott_ios/AeroGearPush.framework"
   install_framework "Pods-nott_ios/Alamofire.framework"
   install_framework "Pods-nott_ios/Bolts.framework"
   install_framework "Pods-nott_ios/Charts.framework"

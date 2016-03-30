@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -16,6 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Get the devices screenbounds for UI placement
+        let screenBounds:CGRect = UIScreen.mainScreen().bounds
+        self.window = UIWindow(frame: screenBounds);
+        
+        // main VC
+        let viewController:UIViewController = ViewController()
+
+        // set the root view controller in the naviagation controller
+        let nav:UINavigationController = UINavigationController(rootViewController: viewController);
+        
+        self.window?.rootViewController = nav;
+        self.window?.makeKeyAndVisible();
+
         return true
     }
 

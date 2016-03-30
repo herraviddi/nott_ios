@@ -10,11 +10,23 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    var screenHeight:CGFloat!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        // get the devices screenheight
+        screenHeight = UIScreen.mainScreen().bounds.height
     }
 
+    // UI Setup
+    func navbarSetup(){
+        self.title = "Nótt"
+    }
+    
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

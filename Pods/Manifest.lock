@@ -1,5 +1,4 @@
 PODS:
-  - AeroGear-Push-Swift (1.2.0)
   - Alamofire (3.3.0)
   - Bolts (1.6.0):
     - Bolts/AppLinks (= 1.6.0)
@@ -24,7 +23,6 @@ PODS:
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
-  - AeroGear-Push-Swift
   - Alamofire (~> 3.0)
   - Charts (~> 2.2)
   - FBSDKCoreKit
@@ -45,7 +43,6 @@ CHECKOUT OPTIONS:
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
 
 SPEC CHECKSUMS:
-  AeroGear-Push-Swift: 2b6ada18939e58d003e6a2315c22be22556048b1
   Alamofire: 9054db4a1b1ca9e363223183e01cea380159a27c
   Bolts: f52a250053bb517ca874523c3913776359ab3def
   Charts: f54267bb3f0f0e74520c6f248517cf5074dfd6fc
