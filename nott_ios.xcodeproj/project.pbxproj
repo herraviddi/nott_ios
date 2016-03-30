@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		794944BE1CAC0E0900C65484 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794944BD1CAC0E0900C65484 /* Constants.swift */; };
+		794944C41CAC111000C65484 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794944C31CAC111000C65484 /* DataService.swift */; };
 		79EA6D461CABFFE800610112 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EA6D451CABFFE800610112 /* AppDelegate.swift */; };
 		79EA6D481CABFFE800610112 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79EA6D471CABFFE800610112 /* ViewController.swift */; };
 		79EA6D4B1CABFFE800610112 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D491CABFFE800610112 /* Main.storyboard */; };
@@ -20,6 +21,7 @@
 		05086AE8EFB1D7B96702D84E /* Pods-nott_ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nott_ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-nott_ios/Pods-nott_ios.release.xcconfig"; sourceTree = "<group>"; };
 		6523D2546BDB792AE1898263 /* Pods-nott_ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-nott_ios.debug.xcconfig"; path = "Pods/Target Support Files/Pods-nott_ios/Pods-nott_ios.debug.xcconfig"; sourceTree = "<group>"; };
 		794944BD1CAC0E0900C65484 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		794944C31CAC111000C65484 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		79EA6D421CABFFE800610112 /* nott_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nott_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79EA6D451CABFFE800610112 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79EA6D471CABFFE800610112 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -42,6 +44,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		794944BF1CAC105200C65484 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				79EA6D471CABFFE800610112 /* ViewController.swift */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		794944C01CAC106A00C65484 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				794944C31CAC111000C65484 /* DataService.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		79EA6D391CABFFE800610112 = {
 			isa = PBXGroup;
 			children = (
@@ -63,9 +81,10 @@
 		79EA6D441CABFFE800610112 /* nott_ios */ = {
 			isa = PBXGroup;
 			children = (
+				794944C01CAC106A00C65484 /* Services */,
+				794944BF1CAC105200C65484 /* ViewControllers */,
 				79EA6D451CABFFE800610112 /* AppDelegate.swift */,
 				794944BD1CAC0E0900C65484 /* Constants.swift */,
-				79EA6D471CABFFE800610112 /* ViewController.swift */,
 				79EA6D491CABFFE800610112 /* Main.storyboard */,
 				79EA6D4C1CABFFE800610112 /* Assets.xcassets */,
 				79EA6D4E1CABFFE800610112 /* LaunchScreen.storyboard */,
@@ -216,6 +235,7 @@
 				79EA6D481CABFFE800610112 /* ViewController.swift in Sources */,
 				79EA6D461CABFFE800610112 /* AppDelegate.swift in Sources */,
 				794944BE1CAC0E0900C65484 /* Constants.swift in Sources */,
+				794944C41CAC111000C65484 /* DataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
