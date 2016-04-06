@@ -39,7 +39,7 @@ class CircleDiagram: UIView {
         //starting point for all drawing code is getting the context.
         let context = UIGraphicsGetCurrentContext()
         //set colorspace
-        let colorspace = CGColorSpaceCreateDeviceRGB()
+//        let colorspace = CGColorSpaceCreateDeviceRGB()
         //set line attributes
 
         
