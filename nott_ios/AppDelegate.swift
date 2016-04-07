@@ -1,4 +1,4 @@
-//
+    //
 //  AppDelegate.swift
 //  nott_ios
 //
@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
+
 
 
 @UIApplicationMain
@@ -21,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Get the devices screenbounds for UI placement
         let screenBounds:CGRect = UIScreen.mainScreen().bounds
         self.window = UIWindow(frame: screenBounds);
+        
+        IQKeyboardManager.sharedManager().enable = true
         
         // main VC
         let viewController:UIViewController = ViewController()
