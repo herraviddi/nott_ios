@@ -13,7 +13,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
 
     // MOCK DATA!
     
-    var percentagePrediction = 0.254 as CGFloat!
+    var percentagePrediction = 0.897 as CGFloat!
     
     var intakeItems = [
         ["id":1,"order":2,"title":"pizza","image":"tempPizza.png"],
@@ -799,7 +799,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         
         // device start time textfield
-        deviceStartTimeTextField.attributedPlaceholder = NSAttributedString(string:"starttime",
+        deviceStartTimeTextField.attributedPlaceholder = NSAttributedString(string:"start time",
             attributes:[NSForegroundColorAttributeName: Constants.AppColors.graycolor])
         
         deviceStartTimeTextField.font = UIFont.systemFontOfSize(16)
@@ -830,7 +830,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         
         // device end time  textfield
-        deviceEndTimeTextField.attributedPlaceholder = NSAttributedString(string:"endtime",
+        deviceEndTimeTextField.attributedPlaceholder = NSAttributedString(string:"end time",
             attributes:[NSForegroundColorAttributeName: Constants.AppColors.graycolor])
         
         deviceEndTimeTextField.font = UIFont.systemFontOfSize(16)
@@ -876,7 +876,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let cancelButton_heightConstraint = NSLayoutConstraint(item: cancelButton, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: self.view.frame.size.height * 0.08)
         self.view.addConstraint(cancelButton_heightConstraint)
         
-        let cancelButton_verticalConstraint = NSLayoutConstraint(item: cancelButton, attribute: .Top, relatedBy: .Equal, toItem: deviceImageView, attribute: .Bottom, multiplier: 1, constant: view.frame.height*0.03)
+        let cancelButton_verticalConstraint = NSLayoutConstraint(item: cancelButton, attribute: .Top, relatedBy: .Equal, toItem: deviceImageView, attribute: .Bottom, multiplier: 1, constant: view.frame.height*0.1)
         self.view.addConstraint(cancelButton_verticalConstraint)
         
         let cancelButton_horizontalConstraint = NSLayoutConstraint(item: cancelButton, attribute: .Left, relatedBy: .Equal, toItem: deviceLogViewPopUP, attribute: .Left, multiplier: 1, constant: view.frame.width * 0.1)
@@ -902,7 +902,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let submitButton_heightConstraint = NSLayoutConstraint(item: submitButton, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .Height, multiplier: 1, constant: self.view.frame.size.height * 0.08)
         self.view.addConstraint(submitButton_heightConstraint)
         
-        let submitButton_verticalConstraint = NSLayoutConstraint(item: submitButton, attribute: .Top, relatedBy: .Equal, toItem: deviceImageView, attribute: .Bottom, multiplier: 1, constant: view.frame.height * 0.03)
+        let submitButton_verticalConstraint = NSLayoutConstraint(item: submitButton, attribute: .Top, relatedBy: .Equal, toItem: deviceImageView, attribute: .Bottom, multiplier: 1, constant: view.frame.height * 0.1)
         self.view.addConstraint(submitButton_verticalConstraint)
         
         let submitButton_horizontalConstraint = NSLayoutConstraint(item: submitButton, attribute: .Right, relatedBy: .Equal, toItem: view, attribute: .Right, multiplier: 1, constant: -(view.frame.width * 0.1))

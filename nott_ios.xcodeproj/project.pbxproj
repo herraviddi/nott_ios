@@ -25,7 +25,7 @@
 		794944C31CAC111000C65484 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		794944C51CAC581A00C65484 /* CircleDiagram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleDiagram.swift; sourceTree = "<group>"; };
 		79E41B261CB59A390070DBDC /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
-		79EA6D421CABFFE800610112 /* nott_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nott_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79EA6D421CABFFE800610112 /* Nótt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nótt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79EA6D451CABFFE800610112 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79EA6D471CABFFE800610112 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		79EA6D4A1CABFFE800610112 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 		79EA6D431CABFFE800610112 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				79EA6D421CABFFE800610112 /* nott_ios.app */,
+				79EA6D421CABFFE800610112 /* Nótt.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,7 +143,7 @@
 			);
 			name = nott_ios;
 			productName = nott_ios;
-			productReference = 79EA6D421CABFFE800610112 /* nott_ios.app */;
+			productReference = 79EA6D421CABFFE800610112 /* Nótt.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -371,7 +371,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Nótt";
 			};
 			name = Debug;
 		};
@@ -389,7 +389,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Nótt";
 			};
 			name = Release;
 		};
