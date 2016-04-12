@@ -1,30 +1,12 @@
 PODS:
-  - Charts (2.2.3):
-    - Charts/Core (= 2.2.3)
-  - Charts/Core (2.2.3)
-  - IQKeyboardManagerSwift (4.0.0)
-  - PureLayout (3.0.1)
-  - SwiftyJSON (2.3.2)
+  - Alamofire (2.0.2)
 
 DEPENDENCIES:
-  - Charts (~> 2.2)
-  - IQKeyboardManagerSwift
-  - PureLayout
-  - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
-
-EXTERNAL SOURCES:
-  SwiftyJSON:
-    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
-
-CHECKOUT OPTIONS:
-  SwiftyJSON:
-    :commit: 2a5b70f06001316d4fb54501edc70b4084705da0
-    :git: https://github.com/SwiftyJSON/SwiftyJSON.git
+  - Alamofire (= 2.0.2)
 
 SPEC CHECKSUMS:
-  Charts: f54267bb3f0f0e74520c6f248517cf5074dfd6fc
-  IQKeyboardManagerSwift: ede2a27b4e1ce053d03073b9c7fa439322f5e405
-  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
-  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
+  Alamofire: 8edbab00802a752bb5240cc2abe70e7e881488ad
 
-COCOAPODS: 0.39.0
+PODFILE CHECKSUM: 0907a841093fff5445355e8dfbcf64ee8c32c073
+
+COCOAPODS: 1.0.0.beta.6

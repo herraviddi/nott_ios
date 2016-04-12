@@ -7,9 +7,7 @@
 //
 
 import UIKit
-import IQKeyboardManagerSwift
-
-
+//import I
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let screenBounds:CGRect = UIScreen.mainScreen().bounds
         self.window = UIWindow(frame: screenBounds);
         
-        IQKeyboardManager.sharedManager().enable = true
+//        IQKeyboardManager.sharedManager().enable = true
         
         // main VC
         let viewController:UIViewController = ViewController()

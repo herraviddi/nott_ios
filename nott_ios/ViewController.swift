@@ -715,7 +715,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         submitButton.layer.cornerRadius = 10.0
         submitButton.layer.borderColor = Constants.AppColors.submitButtonColor.CGColor
         submitButton.setTitleColor(Constants.AppColors.submitButtonColor, forState: .Normal)
-        submitButton.addTarget(self, action: "signupButtonPressed", forControlEvents: .TouchUpInside)
+        submitButton.addTarget(self, action: "submitIntakeButtonPressed", forControlEvents: .TouchUpInside)
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         intakeLogViewPopUp.addSubview(submitButton)
         
@@ -734,6 +734,12 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
 
         
         
+    }
+    
+    func submitIntakeButtonPressed(){
+        let imageData = UIImagePNGRepresentation(mealPhotoImage)
+        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        DataService.ds.postIntake("Rakel Sara", foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!)
     }
     
     func addDeviceUseButtonPressed(sender:UIButton!){

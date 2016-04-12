@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4AD25361EAAF107CB6563393 /* Pods_nott_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDDA935AA6A42F974574E356 /* Pods_nott_ios.framework */; };
 		794944BE1CAC0E0900C65484 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794944BD1CAC0E0900C65484 /* Constants.swift */; };
 		794944C41CAC111000C65484 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794944C31CAC111000C65484 /* DataService.swift */; };
 		794944C61CAC581A00C65484 /* CircleDiagram.swift in Sources */ = {isa = PBXBuildFile; fileRef = 794944C51CAC581A00C65484 /* CircleDiagram.swift */; };
@@ -15,7 +16,6 @@
 		79EA6D4B1CABFFE800610112 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D491CABFFE800610112 /* Main.storyboard */; };
 		79EA6D4D1CABFFE800610112 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D4C1CABFFE800610112 /* Assets.xcassets */; };
 		79EA6D501CABFFE800610112 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D4E1CABFFE800610112 /* LaunchScreen.storyboard */; };
-		A90E5ECCAAE1D4F89E037EDC /* Pods_nott_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 907D7904C7F10B99AD74138B /* Pods_nott_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +24,6 @@
 		794944BD1CAC0E0900C65484 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		794944C31CAC111000C65484 /* DataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		794944C51CAC581A00C65484 /* CircleDiagram.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleDiagram.swift; sourceTree = "<group>"; };
-		79E41B261CB59A390070DBDC /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = "Pods/../build/Debug-iphoneos/Alamofire.framework"; sourceTree = "<group>"; };
 		79EA6D421CABFFE800610112 /* Nótt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Nótt.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		79EA6D451CABFFE800610112 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		79EA6D471CABFFE800610112 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -32,7 +31,7 @@
 		79EA6D4C1CABFFE800610112 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79EA6D4F1CABFFE800610112 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79EA6D511CABFFE800610112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		907D7904C7F10B99AD74138B /* Pods_nott_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nott_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDDA935AA6A42F974574E356 /* Pods_nott_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nott_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A90E5ECCAAE1D4F89E037EDC /* Pods_nott_ios.framework in Frameworks */,
+				4AD25361EAAF107CB6563393 /* Pods_nott_ios.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -117,8 +116,7 @@
 		DADE3EB7154023FE54E26758 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				79E41B261CB59A390070DBDC /* Alamofire.framework */,
-				907D7904C7F10B99AD74138B /* Pods_nott_ios.framework */,
+				CDDA935AA6A42F974574E356 /* Pods_nott_ios.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -130,12 +128,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79EA6D541CABFFE800610112 /* Build configuration list for PBXNativeTarget "nott_ios" */;
 			buildPhases = (
-				9F27126C317A1B136A349BA2 /* Check Pods Manifest.lock */,
+				9F27126C317A1B136A349BA2 /* 📦 Check Pods Manifest.lock */,
 				79EA6D3E1CABFFE800610112 /* Sources */,
 				79EA6D3F1CABFFE800610112 /* Frameworks */,
 				79EA6D401CABFFE800610112 /* Resources */,
-				20FDAD6E26A903A52B26C1DF /* Embed Pods Frameworks */,
-				2AB642339B2C164C18D4619A /* Copy Pods Resources */,
+				20FDAD6E26A903A52B26C1DF /* 📦 Embed Pods Frameworks */,
+				2AB642339B2C164C18D4619A /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -194,14 +192,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		20FDAD6E26A903A52B26C1DF /* Embed Pods Frameworks */ = {
+		20FDAD6E26A903A52B26C1DF /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -209,14 +207,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-nott_ios/Pods-nott_ios-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		2AB642339B2C164C18D4619A /* Copy Pods Resources */ = {
+		2AB642339B2C164C18D4619A /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,14 +222,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-nott_ios/Pods-nott_ios-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		9F27126C317A1B136A349BA2 /* Check Pods Manifest.lock */ = {
+		9F27126C317A1B136A349BA2 /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -368,7 +366,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = nott_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
 				PRODUCT_NAME = "Nótt";
@@ -386,7 +384,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = nott_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
 				PRODUCT_NAME = "Nótt";
