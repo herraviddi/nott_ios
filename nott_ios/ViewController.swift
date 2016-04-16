@@ -13,15 +13,13 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
 
     // MOCK DATA!
     
-    var percentagePrediction = 0.897 as CGFloat!
+    var percentagePrediction = 0.92 as CGFloat!
     
-    var intakeItems = [
-        ["id":1,"order":2,"title":"pizza","image":"tempPizza.png"],
-        ["id":2,"order":1,"title":"pasta","image":"tempPasta.png"],
-        ["id":3,"order":3,"title":"hamburger","image":"tempHamburger.png"]
-    ]
+    var intakeItems = NSMutableArray()
     
     // END OF MOCK DATA!
+    
+    let defaults = NSUserDefaults.standardUserDefaults()
     
     var imagePicker = UIImagePickerController()
 
@@ -60,7 +58,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var unhappyAddButton:UIButton!
     
     var foodTypePickerView = UIPickerView()
-    var foodTypeArray = ["Dinner","Candy","Drink"]
+    var foodTypeArray = ["Dinner","Candy","Drink","Snacks"]
     var selectedFoodType: String!
     
     var intakeLogViewPopUp = UIView()
@@ -68,6 +66,27 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
 
     var blackTransparentOverView = UIView()
     
+    var popularIntakeImage:UIImage!
+    var secondPopularIntakeImage:UIImage!
+    var thirdPopularIntakeImage:UIImage!
+    
+    var addIntakeButtonImage:UIImage!
+    
+    var top3food = NSMutableArray()
+    
+    
+    var popularTitle:String!
+    var popularType:String!
+    var secondTitle:String!
+    var secondType:String!
+    var thirdTitle:String!
+    var thirdType:String!
+    var popularFood:NSMutableArray!
+    
+    override func viewWillAppear(animated: Bool) {
+        popularFood = DataService.ds.getFrequentFood(defaults.valueForKey("username") as! String)
+
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,12 +95,63 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         // get the devices screenheight
         screenHeight = UIScreen.mainScreen().bounds.height
         
-        print(foodTypeArray)
+//        let popularFood = DataService.ds.getFrequentFood(defaults.valueForKey("username") as! String)
+
+        
         navbarSetup()
         mainUISetup()
         predictionViewSetup()
-        setupIntakeLogginView()
-        setupDeviceLoggingView()
+        
+        delay(2.0, closure: {
+            for food in self.popularFood.valueForKey("top3_food") as! NSArray{
+                for item in food as! NSArray{
+                    self.intakeItems.addObject(["id":(item["id"] as! Int),"order":(item["order"] as! Int),"title":(item["title"] as! String),"image":(item["picture"] as! String),"type":(item["type"] as! String)])
+                }
+            }
+        })
+        
+        delay(2.0, closure: {
+            for item in self.intakeItems{
+                if item["order"] as! Int == 0{
+                    self.popularTitle = item["title"] as! String
+                    self.popularType = item["type"] as! String
+                    let base64String = item["image"] as! String
+                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                    let decodedimage = UIImage(data: decodedData!)
+                    if decodedimage != nil{
+                        self.popularIntakeImage = decodedimage! as UIImage
+                    }
+                    
+                }
+                if item["order"] as! Int == 1{
+                    self.secondTitle = item["title"] as! String
+                    self.secondType = item["type"] as! String
+                    let base64String = item["image"] as! String
+                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                    let decodedimage = UIImage(data: decodedData!)
+                    if decodedimage != nil{
+                        self.secondPopularIntakeImage = decodedimage! as UIImage
+                    }
+                }
+                if item["order"] as! Int == 2{
+                    self.thirdTitle = item["title"] as! String
+                    self.thirdType = item["title"] as! String
+                    let base64String = item["image"] as! String
+                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                    let decodedimage = UIImage(data: decodedData!)
+                    if decodedimage != nil{
+                        self.thirdPopularIntakeImage = decodedimage! as UIImage
+                    }
+                }
+            }
+        })
+        
+        delay(2.5, closure: {
+
+            self.setupIntakeLogginView()
+            self.setupDeviceLoggingView()
+        })
+
 
         foodTypePickerView.delegate = self
         foodTypePickerView.dataSource = self
@@ -97,8 +167,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     }
     
     func navbarSetup(){
-        self.title = "Nótt"
-        
+        self.title = defaults.valueForKey("username") as? String
+        self.navigationController?.navigationBarHidden = false
         // removing the horizontal shadow line on the navbar
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: UIBarMetrics.Default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -108,13 +178,13 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let statsBtn = UIButton()
         statsBtn.setImage(UIImage(named: "navbar_statsIcon"), forState: .Normal)
         statsBtn.frame = CGRectMake(0, 0, 30, 30)
-        statsBtn.addTarget(self, action: Selector("statsButtonPressed"), forControlEvents: .TouchUpInside)
+        statsBtn.addTarget(self, action: #selector(ViewController.statsButtonPressed), forControlEvents: .TouchUpInside)
         
         // Settings Button in navigation bar
         let settingsBtn = UIButton()
         settingsBtn.setImage(UIImage(named: "navbar_settingsIcong"), forState: .Normal)
         settingsBtn.frame = CGRectMake(0, 0, 30, 30)
-        settingsBtn.addTarget(self, action: Selector("settingsButtonPressed"), forControlEvents: .TouchUpInside)
+        settingsBtn.addTarget(self, action: #selector(ViewController.settingsButtonPressed), forControlEvents: .TouchUpInside)
         
         // set the buttons to the navbar
         let rightBarButton = UIBarButtonItem()
@@ -124,6 +194,16 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let leftBarButton = UIBarButtonItem()
         leftBarButton.customView = settingsBtn
         self.navigationItem.leftBarButtonItem = leftBarButton
+        
+    }
+    
+    func delay(delay:Double, closure:()->()) {
+        dispatch_after(
+            dispatch_time(
+                DISPATCH_TIME_NOW,
+                Int64(delay * Double(NSEC_PER_SEC))
+            ),
+            dispatch_get_main_queue(), closure)
     }
     
     func predictionViewSetup(){
@@ -219,31 +299,22 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let or_label_horizontalConstraint = NSLayoutConstraint(item: or_label, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
         self.view.addConstraint(or_label_horizontalConstraint)
         
-        var popularIntakeImage:UIImage!
-        var secondPopularIntakeImage:UIImage!
-        var thirdPopularIntakeImage:UIImage!
-        
-        for item in intakeItems{
-//            print(item)
-            if item["order"] == 1{
-                popularIntakeImage = UIImage(named: (item["image"]!) as! String) as UIImage?
-            }
-            if item["order"] == 2{
-                secondPopularIntakeImage = UIImage(named: (item["image"]!) as! String) as UIImage?
-            }
-            if item["order"] == 3{
-                thirdPopularIntakeImage = UIImage(named: (item["image"]!) as! String) as UIImage?
-            }
-        }
-        
         // second popular Button
-        let resizedImage_secondPopularIntake = resizeImage(secondPopularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
         
         let secondPopularIntakeImageAddButton = UIButton(type: UIButtonType.Custom) as UIButton
-        secondPopularIntakeImageAddButton.setImage(resizedImage_secondPopularIntake, forState: .Normal)
-        secondPopularIntakeImageAddButton.addTarget(self, action: "addIntakeButtonPressed", forControlEvents: .TouchUpInside)
+
+        if (secondPopularIntakeImage != nil){
+            let resizedImage_secondPopularIntake = resizeImage(secondPopularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
+            secondPopularIntakeImageAddButton.setImage(resizedImage_secondPopularIntake, forState: .Normal)
+        }else{
+            secondPopularIntakeImageAddButton.setTitle("2", forState: .Normal)
+            secondPopularIntakeImageAddButton.enabled = false
+        }
+        
+        secondPopularIntakeImageAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         secondPopularIntakeImageAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         secondPopularIntakeImageAddButton.clipsToBounds = true
+        secondPopularIntakeImageAddButton.tag = 2
         secondPopularIntakeImageAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         secondPopularIntakeImageAddButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(secondPopularIntakeImageAddButton)
@@ -262,13 +333,20 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         
         // first popular Button
-        let resizedImage_popularIntakeImage = resizeImage(popularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
-        
         let popularIntakeImageAddButton = UIButton(type: UIButtonType.Custom) as UIButton
-        popularIntakeImageAddButton.setImage(resizedImage_popularIntakeImage, forState: .Normal)
-        popularIntakeImageAddButton.addTarget(self, action: "addIntakeButtonPressed", forControlEvents: .TouchUpInside)
+
+        if (popularIntakeImage != nil){
+            let resizedImage_popularIntakeImage = resizeImage(popularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
+            popularIntakeImageAddButton.setImage(resizedImage_popularIntakeImage, forState: .Normal)
+        }else{
+            popularIntakeImageAddButton.setTitle("1", forState: .Normal)
+            popularIntakeImageAddButton.enabled = false
+        }
+        
+        popularIntakeImageAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         popularIntakeImageAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         popularIntakeImageAddButton.clipsToBounds = true
+        popularIntakeImageAddButton.tag = 1
         popularIntakeImageAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         popularIntakeImageAddButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -289,13 +367,21 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         
         // third popular Button
-        let resized_thirdPopularIntakeImage = resizeImage(thirdPopularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
-        
         let thirdPopularIntakeAddButton = UIButton(type: UIButtonType.Custom) as UIButton
-        thirdPopularIntakeAddButton.setImage(resized_thirdPopularIntakeImage, forState: .Normal)
-        thirdPopularIntakeAddButton.addTarget(self, action: "addIntakeButtonPressed", forControlEvents: .TouchUpInside)
+        
+        if thirdPopularIntakeImage != nil{
+            let resized_thirdPopularIntakeImage = resizeImage(thirdPopularIntakeImage!, newWidth: self.view.frame.size.width*0.4)
+            
+            thirdPopularIntakeAddButton.setImage(resized_thirdPopularIntakeImage, forState: .Normal)
+    
+        }else{
+            thirdPopularIntakeAddButton.setTitle("3", forState: .Normal)
+            thirdPopularIntakeAddButton.enabled = false
+        }
+        thirdPopularIntakeAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         thirdPopularIntakeAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         thirdPopularIntakeAddButton.clipsToBounds = true
+        thirdPopularIntakeAddButton.tag = 3
         thirdPopularIntakeAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         thirdPopularIntakeAddButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(thirdPopularIntakeAddButton)
@@ -321,8 +407,9 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         let intakeAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         intakeAddButton.setImage(resizedImage, forState: .Normal)
-        intakeAddButton.addTarget(self, action: "addIntakeButtonPressed", forControlEvents: .TouchUpInside)
+        intakeAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         intakeAddButton.translatesAutoresizingMaskIntoConstraints = false
+        intakeAddButton.tag = 0
         self.view.addSubview(intakeAddButton)
         
         let intakeAddButton_widthConstraint = NSLayoutConstraint(item: intakeAddButton, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .Width, multiplier: 1, constant: (resizedImage.size.width))
@@ -389,7 +476,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         iPadAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         iPadAddButton.setImage(resizedImage_iPad, forState: .Normal)
-        iPadAddButton.addTarget(self, action: "addDeviceUseButtonPressed:", forControlEvents: .TouchUpInside)
+        iPadAddButton.addTarget(self, action: #selector(ViewController.addDeviceUseButtonPressed(_:)), forControlEvents: .TouchUpInside)
         iPadAddButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(iPadAddButton)
         
@@ -413,7 +500,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         iPhoneAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         iPhoneAddButton.setImage(resizedImage_iPhone, forState: .Normal)
-        iPhoneAddButton.addTarget(self, action: "addDeviceUseButtonPressed:", forControlEvents: .TouchUpInside)
+        iPhoneAddButton.addTarget(self, action: #selector(ViewController.addDeviceUseButtonPressed(_:)), forControlEvents: .TouchUpInside)
         iPhoneAddButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(iPhoneAddButton)
         
@@ -437,7 +524,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         tvAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         tvAddButton.setImage(resizedImage_tv, forState: .Normal)
-        tvAddButton.addTarget(self, action: "addDeviceUseButtonPressed:", forControlEvents: .TouchUpInside)
+        tvAddButton.addTarget(self, action: #selector(ViewController.addDeviceUseButtonPressed(_:)), forControlEvents: .TouchUpInside)
         tvAddButton.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(tvAddButton)
         
@@ -455,7 +542,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
     }
 
-    func setupIntakeLogPopUPView(){
+    func setupIntakeLogPopUPView()  {
         intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.6)
         intakeLogViewPopUp.backgroundColor = Constants.AppColors.popBackgroundColor
         self.view.addSubview(self.intakeLogViewPopUp)
@@ -485,7 +572,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         self.view.addConstraint(mealPhotoImageView_horizontalConstraint)
         
         
-        let addIntakeButtonImage = UIImage(named: "noPhoto")
+        addIntakeButtonImage = UIImage(named: "noPhoto")
         // add photo button
         addPhotoButton.hidden = true
         addPhotoButton = UIButton(type: UIButtonType.Custom) as UIButton
@@ -496,7 +583,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         addPhotoButton.layer.cornerRadius = self.view.frame.size.height*0.2 / 2
         
         addPhotoButton.layer.borderColor = Constants.AppColors.graycolor.CGColor
-        addPhotoButton.addTarget(self, action: "addPhotoButtonPressed", forControlEvents: .TouchUpInside)
+        addPhotoButton.addTarget(self, action: #selector(ViewController.addPhotoButtonPressed), forControlEvents: .TouchUpInside)
         addPhotoButton.translatesAutoresizingMaskIntoConstraints = false
         intakeLogViewPopUp.addSubview(addPhotoButton)
         
@@ -617,7 +704,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         happyAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         happyAddButton.setImage(happy_resizedImage, forState: .Normal)
-        happyAddButton.addTarget(self, action: "happyButtonPressed", forControlEvents: .TouchUpInside)
+        happyAddButton.addTarget(self, action: #selector(ViewController.happyButtonPressed), forControlEvents: .TouchUpInside)
         happyAddButton.translatesAutoresizingMaskIntoConstraints = false
         happyAddButton.alpha = 0.3
         intakeLogViewPopUp.addSubview(happyAddButton)
@@ -641,7 +728,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         mediumAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         mediumAddButton.setImage(medium_resizedImage, forState: .Normal)
-        mediumAddButton.addTarget(self, action: "mediumButtonPressed", forControlEvents: .TouchUpInside)
+        mediumAddButton.addTarget(self, action: #selector(ViewController.mediumButtonPressed), forControlEvents: .TouchUpInside)
         mediumAddButton.translatesAutoresizingMaskIntoConstraints = false
         mediumAddButton.alpha = 0.3
         intakeLogViewPopUp.addSubview(mediumAddButton)
@@ -665,7 +752,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         unhappyAddButton = UIButton(type: UIButtonType.Custom) as UIButton
         unhappyAddButton.setImage(unhappy_resizedImage, forState: .Normal)
-        unhappyAddButton.addTarget(self, action: "unhappyButtonPressed", forControlEvents: .TouchUpInside)
+        unhappyAddButton.addTarget(self, action: #selector(ViewController.unhappyButtonPressed), forControlEvents: .TouchUpInside)
         unhappyAddButton.translatesAutoresizingMaskIntoConstraints = false
         unhappyAddButton.alpha = 0.3
         intakeLogViewPopUp.addSubview(unhappyAddButton)
@@ -690,7 +777,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         cancelButton.layer.cornerRadius = 10.0
         cancelButton.layer.borderColor = Constants.AppColors.cancelButtonColor.CGColor
         cancelButton.setTitleColor(Constants.AppColors.cancelButtonColor, forState: .Normal)
-        cancelButton.addTarget(self, action: "cancelIntakeButtonPressed", forControlEvents: .TouchUpInside)
+        cancelButton.addTarget(self, action: #selector(ViewController.cancelIntakeButtonPressed), forControlEvents: .TouchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         intakeLogViewPopUp.addSubview(cancelButton)
         
@@ -715,7 +802,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         submitButton.layer.cornerRadius = 10.0
         submitButton.layer.borderColor = Constants.AppColors.submitButtonColor.CGColor
         submitButton.setTitleColor(Constants.AppColors.submitButtonColor, forState: .Normal)
-        submitButton.addTarget(self, action: "submitIntakeButtonPressed", forControlEvents: .TouchUpInside)
+        submitButton.addTarget(self, action: #selector(ViewController.submitIntakeButtonPressed), forControlEvents: .TouchUpInside)
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         intakeLogViewPopUp.addSubview(submitButton)
         
@@ -737,9 +824,57 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     }
     
     func submitIntakeButtonPressed(){
-        let imageData = UIImagePNGRepresentation(mealPhotoImage)
-        let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
-        DataService.ds.postIntake("Rakel Sara", foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!)
+        if foodTypePickerTextfield.text != "" && intakeTitleTextfield.text != "" && emojiLevel != nil && mealPhotoImage != nil && intakeTimeTextfield.text != ""{
+            let imageData = UIImagePNGRepresentation(mealPhotoImage)
+            let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+            if DataService.ds.postIntake(defaults.valueForKey("username") as! String, foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!) == true{
+                //            let successImageView = UIImageView()
+                //            successImageView.image = UIImage(imageLiteral: "happyEmoji")
+                //            successImageView.frame = CGRectMake(100, 200, 100, 100)
+                //            successImageView.alpha = 0.0
+                //            self.view.addSubview(successImageView)
+                //
+                //            UIView.animateWithDuration(1.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseIn, animations: {
+                //
+                //                successImageView.alpha = 1.0
+                //
+                //                }, completion: nil)
+            }else{
+                
+            }
+            
+            blackTransparentOverView.removeFromSuperview()
+            UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+                self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+                }, completion: { finished in
+                    print("Intake logpop closed!")
+                    self.intakeLogViewPopUp.removeFromSuperview()
+            })
+            
+            
+            // refresh fields
+            foodTypePickerTextfield.text = nil
+            intakeTimeTextfield.text = nil
+            emojiLevel = nil
+            mealPhotoImage = nil
+            addIntakeButtonImage = UIImage(named: "noPhoto")
+            intakeTimeTextfield.text = nil
+        }else{
+            print("missing content for log")
+            displayAlertMessage("Oooppss incomplete log", alertDescription: "You have to fill in all fields before submitting")
+        }
+        
+        
+        
+       
+    }
+    
+    func displayAlertMessage(alertTitle:String, alertDescription:String) -> Void {
+        // hide activityIndicator view and display alert message
+        //        self.activityIndicatorView.hidden = true
+        let alert = UIAlertController(title: alertTitle, message: alertDescription, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func addDeviceUseButtonPressed(sender:UIButton!){
@@ -753,24 +888,20 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
             self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height*0.45, self.view.frame.size.width, self.view.frame.size.height*0.55)
             }, completion: { finished in
-                print("Intake logpop opened!")
         })
         
         if sender == iPadAddButton{
-            print("ipad add button")
             deviceImage = UIImage(named: "iPad_icon")
             deviceImageView.image = deviceImage
             deviceToLog = "iPad"
             
         }
         else if sender == iPhoneAddButton{
-            print("iphone add button")
             deviceImage = UIImage(named: "iPhone_icon")
             deviceImageView.image = deviceImage
             deviceToLog = "iPhone"
         }
         else if sender == tvAddButton{
-            print("tv add button")
             deviceImage = UIImage(named: "tv_icon")
             deviceImageView.image = deviceImage
             deviceToLog = "tv"
@@ -872,7 +1003,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         cancelButton.layer.cornerRadius = 10.0
         cancelButton.layer.borderColor = Constants.AppColors.cancelButtonColor.CGColor
         cancelButton.setTitleColor(Constants.AppColors.cancelButtonColor, forState: .Normal)
-        cancelButton.addTarget(self, action: "cancelDeviceButtonPressed", forControlEvents: .TouchUpInside)
+        cancelButton.addTarget(self, action: #selector(ViewController.cancelDeviceButtonPressed), forControlEvents: .TouchUpInside)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         deviceLogViewPopUP.addSubview(cancelButton)
         
@@ -898,7 +1029,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         submitButton.layer.cornerRadius = 10.0
         submitButton.layer.borderColor = Constants.AppColors.submitButtonColor.CGColor
         submitButton.setTitleColor(Constants.AppColors.submitButtonColor, forState: .Normal)
-        submitButton.addTarget(self, action: "submitDeviceLogButtonPressed", forControlEvents: .TouchUpInside)
+        submitButton.addTarget(self, action: #selector(ViewController.submitDeviceLogButtonPressed), forControlEvents: .TouchUpInside)
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         deviceLogViewPopUP.addSubview(submitButton)
         
@@ -916,7 +1047,6 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
     }
     
-    
     func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
         
         let scale = newWidth / image.size.width
@@ -931,13 +1061,15 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     
     // MARK: - Navigation Actions
     func statsButtonPressed(){
-        print("stats button pressed")
+        let statsVC = StatsViewController()
+        self.navigationController?.pushViewController(statsVC, animated: true)
         
     }
     
     func settingsButtonPressed(){
-        print("settings button pressed")
-        
+        defaults.setValue(nil, forKey: "loggedIn")
+        defaults.setValue(nil, forKey: "username")
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
     func happyButtonPressed(){
@@ -962,9 +1094,36 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         unhappyAddButton.alpha = 0.9
     }
     
-
-    
-    func addIntakeButtonPressed(){
+    func addIntakeButtonPressed(sender:UIButton){
+//        setupIntakeLogPopUPView()
+//        self.view.addSubview(self.intakeLogViewPopUp)
+        
+        if sender.tag == 0{
+            print("no default")
+        }
+        if sender.tag == 1 {
+            print("no 1")
+            mealPhotoImage = popularIntakeImage
+            mealPhotoImageView.image = popularIntakeImage
+            foodTypePickerTextfield.text = popularType
+            intakeTitleTextfield.text = popularTitle
+        }
+        if sender.tag == 2 {
+            print("no 2")
+            mealPhotoImage = secondPopularIntakeImage
+            mealPhotoImageView.image = secondPopularIntakeImage
+            foodTypePickerTextfield.text = secondType
+            intakeTitleTextfield.text = secondTitle
+        
+        }
+        if sender.tag == 3 {
+            print("no 3")
+            mealPhotoImage = thirdPopularIntakeImage
+            mealPhotoImageView.image = thirdPopularIntakeImage
+            foodTypePickerTextfield.text = thirdType
+            intakeTitleTextfield.text = thirdTitle
+            
+        }
         
         blackTransparentOverView.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)
         blackTransparentOverView.backgroundColor = UIColor(red: 0.0/255, green: 0.0/255, blue: 0.0/255, alpha: 0.5)
@@ -975,7 +1134,6 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
             self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height*0.45, self.view.frame.size.width, self.view.frame.size.height*0.55)
             }, completion: { finished in
-                print("Intake logpop opened!")
         })
     }
     
@@ -984,7 +1142,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         doneToolbar.barStyle = UIBarStyle.BlackTranslucent
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
-        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: Selector("doneButtonAction"))
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: #selector(ViewController.doneButtonAction))
         
         done.tintColor = UIColor.whiteColor()
         var items = [AnyObject]()
@@ -1004,7 +1162,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         doneToolbar.barStyle = UIBarStyle.BlackTranslucent
         
         let flexSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.FlexibleSpace, target: nil, action: nil)
-        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: Selector("foodPickerDoneAction"))
+        let done: UIBarButtonItem = UIBarButtonItem(title: "Done", style: UIBarButtonItemStyle.Done, target: self, action: #selector(ViewController.foodPickerDoneAction))
         
         done.tintColor = UIColor.whiteColor()
         var items = [AnyObject]()
@@ -1042,7 +1200,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         textfield.inputView = datePickerView
-        datePickerView.addTarget(self, action: Selector("handleDeviceStartTimeDatePicker:"), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action: #selector(ViewController.handleDeviceStartTimeDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
     }
     
@@ -1056,7 +1214,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         textfield.inputView = datePickerView
-        datePickerView.addTarget(self, action: Selector("handleDeviceEndTimeDatePicker:"), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action: #selector(ViewController.handleDeviceEndTimeDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
         
     }
     
@@ -1070,7 +1228,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         let datePickerView  : UIDatePicker = UIDatePicker()
         datePickerView.datePickerMode = UIDatePickerMode.DateAndTime
         textfield.inputView = datePickerView
-        datePickerView.addTarget(self, action: Selector("handleIntakeTimeDatePicker:"), forControlEvents: UIControlEvents.ValueChanged)
+        datePickerView.addTarget(self, action: #selector(ViewController.handleIntakeTimeDatePicker(_:)), forControlEvents: UIControlEvents.ValueChanged)
 
     }
     
@@ -1081,7 +1239,23 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     }
     
     func submitDeviceLogButtonPressed(){
-        []
+        
+        if deviceStartTimeTextField.text != "" && deviceEndTimeTextField.text != ""{
+            DataService.ds.postActivity(defaults.valueForKey("username") as! String, startTime: deviceStartTimeTextField.text!, endTime: deviceEndTimeTextField.text!, type: deviceToLog)
+            blackTransparentOverView.removeFromSuperview()
+            UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+                self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+                }, completion: { finished in
+            })
+            
+            deviceStartTimeTextField.text = ""
+            deviceEndTimeTextField.text = ""
+            deviceToLog = ""
+        }else{
+            displayAlertMessage("Ooopppsss incomplete log", alertDescription: "make sure you fill out both fields")
+        }
+        
+
     }
 
     func cancelDeviceButtonPressed(){
@@ -1089,8 +1263,11 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
             self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
             }, completion: { finished in
-                print("Intake logpop closed!")
         })
+        
+        deviceStartTimeTextField.text = ""
+        deviceEndTimeTextField.text = ""
+        deviceToLog = ""
     }
     
     func cancelIntakeButtonPressed(){
@@ -1098,8 +1275,15 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
             self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
             }, completion: { finished in
-                print("Intake logpop closed!")
+//                self.intakeLogViewPopUp.removeFromSuperview()
         })
+        
+        // refresh fields
+        foodTypePickerTextfield.text = ""
+        intakeTimeTextfield.text = ""
+        emojiLevel = nil
+        mealPhotoImage = nil
+        intakeTitleTextfield.text = ""
     }
     
     
@@ -1117,8 +1301,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         return self.foodTypeArray[row]
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
-    {
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int){
         selectedFoodType = self.foodTypeArray[row]
     }
     

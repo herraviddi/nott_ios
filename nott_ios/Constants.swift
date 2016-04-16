@@ -1,8 +1,8 @@
 //
 //  Constants.swift
-//  nott_ios
+//  nott
 //
-//  Created by Vidar Fridriksson on 30/03/16.
+//  Created by Vidar Fridriksson on 07/04/16.
 //  Copyright © 2016 hideout. All rights reserved.
 //
 
@@ -20,6 +20,9 @@ struct Constants {
         static let popBackgroundColor = UIColor(red: 242.0/255, green: 242.0/255, blue: 242.0/255, alpha: 1.0)
         static let submitButtonColor = UIColor(red: 0.0/255, green: 177.0/255, blue: 187.0/255, alpha: 1.0)
         static let cancelButtonColor = UIColor(red: 224.0/255, green: 90.0/255, blue: 89.0/255, alpha: 1.0)
+        static let appRedColor = UIColor(red: 224.0/255, green: 90.0/255, blue: 89.0/255, alpha: 1.0)
+        static let appWhiteColor = UIColor(red: 242.0/255, green: 242.0/255, blue: 242.0/255, alpha: 1.0)
+        static let appPurpleColor = UIColor(red: 146.0/255, green: 101.0/255, blue: 184.0/255, alpha: 1.0)
     }
     
     

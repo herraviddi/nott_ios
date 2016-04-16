@@ -7,7 +7,7 @@
 //
 
 import UIKit
-//import I
+import HockeySDK
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        IQKeyboardManager.sharedManager().enable = true
         
         // main VC
-        let viewController:UIViewController = ViewController()
+        let viewController:UIViewController = LoginAppViewController()
 
         // set the root view controller in the naviagation controller
         let nav:UINavigationController = UINavigationController(rootViewController: viewController);
@@ -36,6 +36,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // set the color of the title text in the navbar
         UINavigationBar.appearance().tintColor = Constants.AppColors.blueColor
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : Constants.AppColors.blueColor]
+        
+        //HockeyApp
+        BITHockeyManager.sharedHockeyManager().configureWithIdentifier("65b81ff6402f4385b9b6e020d24a0fea")
+        // Do some additional configuration if needed here
+        BITHockeyManager.sharedHockeyManager().startManager()
+        BITHockeyManager.sharedHockeyManager().authenticator.authenticateInstallation()
 
         return true
     }

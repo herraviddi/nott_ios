@@ -7,22 +7,35 @@
 //
 
 import Foundation
-//import Alamofire
+import Alamofire
 
 class DataService{
     var UserObject = [String:AnyObject]()
-    
+    var top3Foods = [String:AnyObject]()
+    var foodListArray = NSMutableArray()
     
     static let ds = DataService()
     
+    private var _BASE_URL = "https://nott.herokuapp.com/"
+    
+    var BASE_URL: String{
+        return _BASE_URL
+    }
     
     private init(){
         self.UserObject = [String:AnyObject]()
+        self.top3Foods = [String:AnyObject]()
+        self.foodListArray = NSMutableArray()
     }
     
-    func postIntake(userName:String,foodType:String,foodTitle:String,score:Int,grams:Int,picture:String,timeStamp:String){
+    // TODO login/signup
+    
+    
+    func postIntake(userName:String,foodType:String,foodTitle:String,score:Int,grams:Int,picture:String,timeStamp:String) -> Bool{
         
-        let parameters = [
+        var returnBool = false
+        
+        let data = [
             "user_name" :userName,
             "food_type" :foodType,
             "title" :foodTitle,
@@ -32,41 +45,102 @@ class DataService{
             "timestamp" : timeStamp
         ]
         
-        
-        
-        let request = NSMutableURLRequest(URL: NSURL(string:"https://nott.herokuapp.com/food")!)
-        
-        let session = NSURLSession.sharedSession()
-        request.HTTPMethod = "POST"
-        
-        //Note : Add the corresponding "Content-Type" and "Accept" header. In this example I had used the application/json.
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        request.HTTPBody = try! NSJSONSerialization.dataWithJSONObject(parameters, options: [])
-        
-        let task = session.dataTaskWithRequest(request) { data, response, error in
-            guard data != nil else {
-                print("no data found: \(error)")
-                return
-            }
-            
-            do {
-                if let json = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-                    print("Response: \(json)")
-                } else {
-                    let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)// No error thrown, but not NSDictionary
-                    print("Error could not parse JSON: \(jsonStr)")
+        Alamofire.request(.POST, BASE_URL + "food", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                if response.result.isSuccess {
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("send activity success")
+                        returnBool = true
+                    }
+                }else{
+                    print("error in post activity dataservice")
                 }
-            } catch let parseError {
-                print(parseError)// Log the error thrown by `JSONObjectWithData`
-                let jsonStr = NSString(data: data!, encoding: NSUTF8StringEncoding)
-                print("Error could not parse JSON: '\(jsonStr)'")
-            }
+        }
+
+        return returnBool
+    }
+    
+    func postActivity(userName:String,startTime:String,endTime:String,type:String){
+        
+        let data = [
+            "user_name" : userName,
+            "activity_type" : type,
+            "start_time" : startTime,
+            "end_time" : endTime
+        ]
+        
+        
+        Alamofire.request(.POST, BASE_URL + "activity", parameters:data , encoding: .JSON)
+            .responseJSON { response in
+                if response.result.isSuccess {
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("send activity success")
+                    }
+                }else{
+                    print("error in post activity dataservice")
+                }
+        }
+    
+    }
+
+
+    
+    func getFrequentFood(username:String) -> NSMutableArray{
+        let getURL = BASE_URL + "get_frequent_food?user_name=" + username
+        
+        self.foodListArray = []
+        Alamofire.request(.GET,getURL , parameters: nil)
+            .responseJSON { response in
+//                print(response.result.value)
+                if let JSON = response.result.value {
+                    self.foodListArray.addObject(JSON)
+                }
         }
         
-        task.resume()
-
+        return foodListArray
         
     }
+    
+    func getUserSleepQualityHistory(username:String) -> NSMutableArray{
+        let sleepQArray = NSMutableArray()
+        
+        let getURL = BASE_URL + "get_sleep_quality_chart?user_name=" + username
+//        https://nott.herokuapp.com/get_sleep_quality_chart?user_name=
+        
+        Alamofire.request(.GET,getURL , parameters: nil)
+            .responseJSON { response in
+                
+                if let JSON = response.result.value {
+                    sleepQArray.addObject(JSON)
+                }
+        }
+        
+        return sleepQArray
+    }
+    
+    func getUserTimeLine(username:String, datestr:String) -> NSMutableArray{
+        let dayTimeLine = NSMutableArray()
+        //https://nott.herokuapp.com/get_timeline_for_day?user_name=rakel&date_str=2016-04-11
+//        let datestr = "2016-04-15" 
+        let getURL = BASE_URL + "get_timeline_for_day?user_name=" + username + "&date_str=" + datestr
+        
+        Alamofire.request(.GET,getURL , parameters: nil)
+            .responseJSON { response in
+//                print(response.result.value)
+                if let JSON = response.result.value {
+                    dayTimeLine.addObject(JSON)
+                }
+        }
+        
+        return dayTimeLine
+    }
+    
+    
+    
+    
+
 }
