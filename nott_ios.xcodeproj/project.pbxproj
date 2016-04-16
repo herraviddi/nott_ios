@@ -19,6 +19,7 @@
 		79EA6D4B1CABFFE800610112 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D491CABFFE800610112 /* Main.storyboard */; };
 		79EA6D4D1CABFFE800610112 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D4C1CABFFE800610112 /* Assets.xcassets */; };
 		79EA6D501CABFFE800610112 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79EA6D4E1CABFFE800610112 /* LaunchScreen.storyboard */; };
+		79FB11DC1CC2BF3000521E9C /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79FB11DB1CC2BF3000521E9C /* ProgressHUD.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		79EA6D4C1CABFFE800610112 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		79EA6D4F1CABFFE800610112 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		79EA6D511CABFFE800610112 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79FB11DB1CC2BF3000521E9C /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		CDDA935AA6A42F974574E356 /* Pods_nott_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_nott_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -65,6 +67,7 @@
 			children = (
 				79C56EFA1CBE85C500BC0AB1 /* LoginAppViewController.swift */,
 				79EA6D471CABFFE800610112 /* ViewController.swift */,
+				79FB11DB1CC2BF3000521E9C /* ProgressHUD.swift */,
 				79C56EF81CBE805400BC0AB1 /* StatsViewController.swift */,
 			);
 			name = ViewControllers;
@@ -255,6 +258,7 @@
 			files = (
 				790722A91CC254050028BCE3 /* TimeLineTableViewCell.swift in Sources */,
 				79EA6D481CABFFE800610112 /* ViewController.swift in Sources */,
+				79FB11DC1CC2BF3000521E9C /* ProgressHUD.swift in Sources */,
 				79C56EFB1CBE85C500BC0AB1 /* LoginAppViewController.swift in Sources */,
 				79EA6D461CABFFE800610112 /* AppDelegate.swift in Sources */,
 				794944BE1CAC0E0900C65484 /* Constants.swift in Sources */,
@@ -378,7 +382,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = nott_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
 				PRODUCT_NAME = "Nótt";
@@ -396,7 +400,7 @@
 					"$(PROJECT_DIR)/build/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = nott_ios/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
 				PRODUCT_NAME = "Nótt";

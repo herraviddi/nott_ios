@@ -58,7 +58,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var unhappyAddButton:UIButton!
     
     var foodTypePickerView = UIPickerView()
-    var foodTypeArray = ["Dinner","Candy","Drink","Snacks"]
+    var foodTypeArray = ["","Dinner","Candy","Drink","Snacks"]
     var selectedFoodType: String!
     
     var intakeLogViewPopUp = UIView()
@@ -101,8 +101,11 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         navbarSetup()
         mainUISetup()
         predictionViewSetup()
+        let progressHUD = ProgressHUD(text: "Loading Data")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
         
-        delay(2.0, closure: {
+        delay(1.5, closure: {
             for food in self.popularFood.valueForKey("top3_food") as! NSArray{
                 for item in food as! NSArray{
                     self.intakeItems.addObject(["id":(item["id"] as! Int),"order":(item["order"] as! Int),"title":(item["title"] as! String),"image":(item["picture"] as! String),"type":(item["type"] as! String)])
@@ -111,6 +114,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         })
         
         delay(2.0, closure: {
+            
             for item in self.intakeItems{
                 if item["order"] as! Int == 0{
                     self.popularTitle = item["title"] as! String
@@ -135,7 +139,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
                 }
                 if item["order"] as! Int == 2{
                     self.thirdTitle = item["title"] as! String
-                    self.thirdType = item["title"] as! String
+                    self.thirdType = item["type"] as! String
                     let base64String = item["image"] as! String
                     let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
                     let decodedimage = UIImage(data: decodedData!)
@@ -146,8 +150,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
             }
         })
         
-        delay(2.5, closure: {
-
+        delay(2.0, closure: {
+            progressHUD.removeFromSuperview()
             self.setupIntakeLogginView()
             self.setupDeviceLoggingView()
         })
@@ -314,6 +318,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         secondPopularIntakeImageAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         secondPopularIntakeImageAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         secondPopularIntakeImageAddButton.clipsToBounds = true
+        secondPopularIntakeImageAddButton.layer.borderColor = UIColor.blackColor().CGColor
+        secondPopularIntakeImageAddButton.layer.borderWidth = 0.8
         secondPopularIntakeImageAddButton.tag = 2
         secondPopularIntakeImageAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         secondPopularIntakeImageAddButton.translatesAutoresizingMaskIntoConstraints = false
@@ -346,6 +352,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         popularIntakeImageAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         popularIntakeImageAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         popularIntakeImageAddButton.clipsToBounds = true
+        popularIntakeImageAddButton.layer.borderColor = UIColor.blackColor().CGColor
+        popularIntakeImageAddButton.layer.borderWidth = 0.8
         popularIntakeImageAddButton.tag = 1
         popularIntakeImageAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         popularIntakeImageAddButton.translatesAutoresizingMaskIntoConstraints = false
@@ -381,6 +389,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         thirdPopularIntakeAddButton.addTarget(self, action: #selector(ViewController.addIntakeButtonPressed), forControlEvents: .TouchUpInside)
         thirdPopularIntakeAddButton.layer.cornerRadius = self.view.frame.size.width*0.2/2
         thirdPopularIntakeAddButton.clipsToBounds = true
+        thirdPopularIntakeAddButton.layer.borderColor = UIColor.blackColor().CGColor
+        thirdPopularIntakeAddButton.layer.borderWidth = 0.8
         thirdPopularIntakeAddButton.tag = 3
         thirdPopularIntakeAddButton.contentMode = UIViewContentMode.ScaleAspectFill
         thirdPopularIntakeAddButton.translatesAutoresizingMaskIntoConstraints = false
@@ -828,19 +838,10 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
             let imageData = UIImagePNGRepresentation(mealPhotoImage)
             let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
             if DataService.ds.postIntake(defaults.valueForKey("username") as! String, foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!) == true{
-                //            let successImageView = UIImageView()
-                //            successImageView.image = UIImage(imageLiteral: "happyEmoji")
-                //            successImageView.frame = CGRectMake(100, 200, 100, 100)
-                //            successImageView.alpha = 0.0
-                //            self.view.addSubview(successImageView)
-                //
-                //            UIView.animateWithDuration(1.5, delay: 0.5, options: UIViewAnimationOptions.CurveEaseIn, animations: {
-                //
-                //                successImageView.alpha = 1.0
-                //
-                //                }, completion: nil)
+                print("log success")
             }else{
-                
+                print("log unsuccessful")
+                displayAlertMessage("Log unsuccessful", alertDescription: "Something is broken ... sorry")
             }
             
             blackTransparentOverView.removeFromSuperview()
@@ -848,7 +849,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
                 self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
                 }, completion: { finished in
                     print("Intake logpop closed!")
-                    self.intakeLogViewPopUp.removeFromSuperview()
+//                    self.intakeLogViewPopUp.removeFromSuperview()
             })
             
             
@@ -1095,9 +1096,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     }
     
     func addIntakeButtonPressed(sender:UIButton){
-//        setupIntakeLogPopUPView()
-//        self.view.addSubview(self.intakeLogViewPopUp)
-        
+
         if sender.tag == 0{
             print("no default")
         }

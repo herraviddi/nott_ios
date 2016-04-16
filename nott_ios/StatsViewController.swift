@@ -15,6 +15,8 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
     var timeLineUIView:UIView!
     
     var tableView = UITableView()
+    var refreshControl = UIRefreshControl()
+
     let dateLabel = UILabel()
     var sleepChartView = LineChartView()
     var sleepDataEntries = NSMutableArray()
@@ -33,6 +35,11 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
         self.view.backgroundColor = UIColor.whiteColor()
         let navigationBarHeight: CGFloat = self.navigationController!.navigationBar.frame.height
 
+        
+
+        let progressHUD = ProgressHUD(text: "Loading Data")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
         
         chartsUIView = UIView()
         chartsUIView.frame = CGRectMake(0, navigationBarHeight, self.view.frame.size.width, (self.view.frame.size.height-navigationBarHeight)/2)
@@ -80,6 +87,7 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
             self.setupSleepChart()
             self.setupTimeLineView()
             self.drawTimeLine()
+            progressHUD.removeFromSuperview()
 
         })
 
@@ -89,7 +97,9 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
     
     
     func chartValueSelected(chartView: ChartViewBase, entry: ChartDataEntry, dataSetIndex: Int, highlight: ChartHighlight) {
-        
+        let progressHUD = ProgressHUD(text: "loading...")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
         
         let chosenDate = String(dateDataEntries[entry.xIndex])
         
@@ -106,17 +116,17 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
         
         dateLabel.text = chosenDate
         
-        delay(1.5, closure: {
+        delay(1.2, closure: {
             for data in timeLineFetchData.valueForKey("objects_for_timeline") as! NSArray{
                 for item in data as! NSArray{
                     self.timeLineData.addObject(item)
                 }
             }
             self.tableView.reloadData()
+            progressHUD.removeFromSuperview()
         })
         
         
-//        println("\(entry.value) in \(months[entry.xIndex])")
     }
     
     
@@ -205,6 +215,24 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
         self.tableView.backgroundColor = UIColor.clearColor()
         self.timeLineUIView.addSubview(self.tableView)
         
+        // Refresh Control
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: #selector(StatsViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        self.tableView.addSubview(refreshControl)
+        
+    }
+    
+    func refresh(){
+        self.tableView.reloadData()
+        stopRefresh()
+        
+    }
+    func stopRefresh(){
+        if self.refreshControl.refreshing
+        {
+            self.refreshControl.endRefreshing()
+        }
+        NSLog("stopping")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -222,11 +250,13 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //
+        var emojiImage = UIImage()
         var iconImage = UIImage()
         var titleText:String!
         if (timeLineData[indexPath.row].valueForKey("type") as! String) == "activity" {
             iconImage = UIImage(imageLiteral: (timeLineData[indexPath.row].valueForKey("activity_type")as! String) + "_icon")
             titleText = (timeLineData[indexPath.row].valueForKey("activity_type")as! String)
+            
         }else{
             let base64String = (timeLineData[indexPath.row].valueForKey("picture") as! String)
             let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
@@ -235,6 +265,17 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
                 iconImage = decodedimage! as UIImage
             }
             titleText = (timeLineData[indexPath.row].valueForKey("title") as! String)
+            
+            if (timeLineData[indexPath.row].valueForKey("score") as! NSNumber) == 1{
+                emojiImage = UIImage(imageLiteral: "sadEmoji")
+            }
+            if (timeLineData[indexPath.row].valueForKey("score") as! NSNumber) == 2{
+                emojiImage = UIImage(imageLiteral: "mediumEmoji")
+            }
+            if (timeLineData[indexPath.row].valueForKey("score") as! NSNumber) == 3{
+                emojiImage = UIImage(imageLiteral: "happyEmoji")
+            }
+            
         }
 
 
@@ -243,6 +284,7 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
             cell.timeLabel.text = (timeLineData[indexPath.row].valueForKey("time") as! String)
             cell.titleLabel.text = titleText
             cell.itemIcon.image = iconImage
+            cell.emojiLevelIcon.image = emojiImage
             cell.backgroundColor = UIColor.clearColor()
             return cell
         }else{
@@ -250,6 +292,7 @@ class StatsViewController: UIViewController,ChartViewDelegate,UITableViewDataSou
             cell.timeLabel.text = (timeLineData[indexPath.row].valueForKey("time") as! String)
             cell.titleLabel.text = titleText
             cell.itemIcon.image = iconImage
+            cell.emojiLevelIcon.image = emojiImage
             cell.backgroundColor = UIColor.clearColor()
             
             return cell

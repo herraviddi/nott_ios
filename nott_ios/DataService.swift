@@ -47,7 +47,9 @@ class DataService{
         
         Alamofire.request(.POST, BASE_URL + "food", parameters:data as? [String : AnyObject] , encoding: .JSON)
             .responseJSON { response in
+//                print(response.result.description)
                 if response.result.isSuccess {
+//                    print(response.result.value)
                     if response.response?.statusCode == 400{
                         print("error 400")
                     }else{

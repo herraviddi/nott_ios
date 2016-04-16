@@ -13,7 +13,7 @@ class TimeLineTableViewCell: UITableViewCell {
     var itemIcon = UIImageView()
     var timeLabel = UILabel()
     var titleLabel = UILabel()
-    var emojiLevelIcon = UIImage()
+    var emojiLevelIcon = UIImageView()
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -36,6 +36,12 @@ class TimeLineTableViewCell: UITableViewCell {
         titleLabel.font = UIFont.systemFontOfSize(16, weight: UIFontWeightLight)
         titleLabel.textAlignment = .Left
         contentView.addSubview(titleLabel)
+        
+        emojiLevelIcon.frame = CGRectMake(contentView.frame.size.width*0.7,contentView.frame.size.height*0.3,contentView.frame.size.height*0.9,contentView.frame.size.height*0.9)
+        emojiLevelIcon.layer.cornerRadius = (contentView.frame.size.height*0.9)/2
+        emojiLevelIcon.clipsToBounds = true
+
+        contentView.addSubview(emojiLevelIcon)
     }
     
     required init?(coder aDecoder: NSCoder) {
