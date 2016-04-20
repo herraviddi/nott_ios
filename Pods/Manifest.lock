@@ -1,4 +1,5 @@
 PODS:
+  - AeroGear-Push-Swift (1.2.0)
   - Alamofire (3.2.0)
   - Charts (2.2.1):
     - Charts/Core (= 2.2.1)
@@ -9,6 +10,7 @@ PODS:
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
+  - AeroGear-Push-Swift
   - Alamofire (= 3.2)
   - Charts (= 2.2.1)
   - HockeySDK (~> 3.8.5)
@@ -24,11 +26,12 @@ CHECKOUT OPTIONS:
     :git: https://github.com/SwiftyJSON/SwiftyJSON.git
 
 SPEC CHECKSUMS:
+  AeroGear-Push-Swift: 2b6ada18939e58d003e6a2315c22be22556048b1
   Alamofire: 4da478599fccddff361205c8929333d7fe18dceb
   Charts: 3ff893c1a4416ab6abed7a6d26fa1c13372f3456
   HockeySDK: ab68303eec6680f6b539de65d747742dd276e934
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
-PODFILE CHECKSUM: fcf5c8259cdf8f73cc8db006b5a76bf572387dc8
+PODFILE CHECKSUM: 02395c13e036c82eed03ef798e6b893d87b84928
 
 COCOAPODS: 1.0.0.beta.6

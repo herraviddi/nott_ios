@@ -6,5 +6,6 @@ target 'nott_ios' do
     pod 'Charts', '2.2.1'
     pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git'
     pod 'HockeySDK', '~> 3.8.5'
+    pod 'AeroGear-Push-Swift'
 end
 

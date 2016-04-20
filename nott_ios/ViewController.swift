@@ -7,7 +7,7 @@
 //
 
 import UIKit
-
+import Alamofire
 
 class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerViewDelegate,UIPickerViewDataSource,UINavigationControllerDelegate{
 
@@ -32,16 +32,26 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var vertical_split_intake:UIImageView!
     var vertical_split_device:UIImageView!
     
+    // intake popup elements
     var mealPhotoImage:UIImage!
     var mealPhotoImageView = UIImageView()
     var addPhotoButton = UIButton()
-
-    var deviceImage:UIImage!
-    var deviceImageView = UIImageView()
-    
+    var addIntakeButtonImage:UIImage!
+    var emojiLevel:Int!
+    var happyAddButton:UIButton!
+    var mediumAddButton:UIButton!
+    var unhappyAddButton:UIButton!
     var intakeTitleTextfield = UITextField()
     var intakeTimeTextfield = UITextField()
     var foodTypePickerTextfield = UITextField()
+    var foodTypePickerView = UIPickerView()
+    var foodTypeArray = ["","Dinner","Candy","Drink","Snacks"]
+    var selectedFoodType: String!
+    
+    
+    
+    var deviceImage:UIImage!
+    var deviceImageView = UIImageView()
     
     var iPadAddButton:UIButton!
     var iPhoneAddButton:UIButton!
@@ -52,14 +62,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var deviceEndTimeTextField = UITextField()
     var deviceToLog:String!
     
-    var emojiLevel:Int!
-    var happyAddButton:UIButton!
-    var mediumAddButton:UIButton!
-    var unhappyAddButton:UIButton!
     
-    var foodTypePickerView = UIPickerView()
-    var foodTypeArray = ["","Dinner","Candy","Drink","Snacks"]
-    var selectedFoodType: String!
+
     
     var intakeLogViewPopUp = UIView()
     var deviceLogViewPopUP = UIView()
@@ -70,10 +74,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var secondPopularIntakeImage:UIImage!
     var thirdPopularIntakeImage:UIImage!
     
-    var addIntakeButtonImage:UIImage!
     
     var top3food = NSMutableArray()
-    
     
     var popularTitle:String!
     var popularType:String!
@@ -83,79 +85,101 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     var thirdType:String!
     var popularFood:NSMutableArray!
     
-    override func viewWillAppear(animated: Bool) {
-        popularFood = DataService.ds.getFrequentFood(defaults.valueForKey("username") as! String)
-
+    
+    var progressHUD:ProgressHUD!
+    
+    
+    func getFrequentFood(username:String,completionHandler:((UIBackgroundFetchResult) -> Void)!){
+        
+        progressHUD = ProgressHUD(text: "Loading Data")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
+        
+        let getURL = "https://nott.herokuapp.com/" + "get_frequent_food?user_name=" + username
+        
+        let foodListArray = NSMutableArray()
+        Alamofire.request(.GET,getURL , parameters: nil)
+            .responseJSON { response in
+                switch response.result {
+                case .Success(_):
+                    if let JSON = response.result.value {
+                        foodListArray.addObject(JSON)
+                        completionHandler(UIBackgroundFetchResult.NewData)
+                    }
+                case .Failure(let error):
+                    print("Request failed with error : \(error)")
+                }
+        }
+        
+        self.popularFood = foodListArray
     }
+    
+    func loadUI(){
+    
+        for food in self.popularFood.valueForKey("top3_food") as! NSArray{
+            for item in food as! NSArray{
+                self.intakeItems.addObject(["id":(item["id"] as! Int),"order":(item["order"] as! Int),"title":(item["title"] as! String),"image":(item["picture"] as! String),"type":(item["type"] as! String)])
+            }
+        }
+        
+        for item in self.intakeItems{
+            if item["order"] as! Int == 0{
+                self.popularTitle = item["title"] as! String
+                self.popularType = item["type"] as! String
+                let base64String = item["image"] as! String
+                let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                let decodedimage = UIImage(data: decodedData!)
+                if decodedimage != nil{
+                    self.popularIntakeImage = decodedimage! as UIImage
+                }
+                
+            }
+            if item["order"] as! Int == 1{
+                self.secondTitle = item["title"] as! String
+                self.secondType = item["type"] as! String
+                let base64String = item["image"] as! String
+                let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                let decodedimage = UIImage(data: decodedData!)
+                if decodedimage != nil{
+                    self.secondPopularIntakeImage = decodedimage! as UIImage
+                }
+            }
+            if item["order"] as! Int == 2{
+                self.thirdTitle = item["title"] as! String
+                self.thirdType = item["type"] as! String
+                let base64String = item["image"] as! String
+                let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
+                let decodedimage = UIImage(data: decodedData!)
+                if decodedimage != nil{
+                    self.thirdPopularIntakeImage = decodedimage! as UIImage
+                }
+            }
+        }
+        
+        progressHUD.removeFromSuperview()
+        self.setupIntakeLogginView()
+        self.setupDeviceLoggingView()
+        
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        self.getFrequentFood(defaults.valueForKey("username") as! String, completionHandler:{(UIBackgroundFetchResult) -> Void in
+            
+            print("success")
+            self.loadUI()
+            
+        })
+        
         // get the devices screenheight
         screenHeight = UIScreen.mainScreen().bounds.height
-        
-//        let popularFood = DataService.ds.getFrequentFood(defaults.valueForKey("username") as! String)
-
         
         navbarSetup()
         mainUISetup()
         predictionViewSetup()
-        let progressHUD = ProgressHUD(text: "Loading Data")
-        self.view.addSubview(progressHUD)
-        self.view.bringSubviewToFront(progressHUD)
-        
-        delay(1.5, closure: {
-            for food in self.popularFood.valueForKey("top3_food") as! NSArray{
-                for item in food as! NSArray{
-                    self.intakeItems.addObject(["id":(item["id"] as! Int),"order":(item["order"] as! Int),"title":(item["title"] as! String),"image":(item["picture"] as! String),"type":(item["type"] as! String)])
-                }
-            }
-        })
-        
-        delay(2.0, closure: {
-            
-            for item in self.intakeItems{
-                if item["order"] as! Int == 0{
-                    self.popularTitle = item["title"] as! String
-                    self.popularType = item["type"] as! String
-                    let base64String = item["image"] as! String
-                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
-                    let decodedimage = UIImage(data: decodedData!)
-                    if decodedimage != nil{
-                        self.popularIntakeImage = decodedimage! as UIImage
-                    }
-                    
-                }
-                if item["order"] as! Int == 1{
-                    self.secondTitle = item["title"] as! String
-                    self.secondType = item["type"] as! String
-                    let base64String = item["image"] as! String
-                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
-                    let decodedimage = UIImage(data: decodedData!)
-                    if decodedimage != nil{
-                        self.secondPopularIntakeImage = decodedimage! as UIImage
-                    }
-                }
-                if item["order"] as! Int == 2{
-                    self.thirdTitle = item["title"] as! String
-                    self.thirdType = item["type"] as! String
-                    let base64String = item["image"] as! String
-                    let decodedData = NSData(base64EncodedString: base64String, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)
-                    let decodedimage = UIImage(data: decodedData!)
-                    if decodedimage != nil{
-                        self.thirdPopularIntakeImage = decodedimage! as UIImage
-                    }
-                }
-            }
-        })
-        
-        delay(2.0, closure: {
-            progressHUD.removeFromSuperview()
-            self.setupIntakeLogginView()
-            self.setupDeviceLoggingView()
-        })
-
 
         foodTypePickerView.delegate = self
         foodTypePickerView.dataSource = self
@@ -168,6 +192,8 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
     
     func mainUISetup(){
         self.view.backgroundColor = UIColor.whiteColor()
+//        self.view.backgroundColor = Constants.AppColors.appRedColor
+
     }
     
     func navbarSetup(){
@@ -552,6 +578,43 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
     }
 
+    func respondToIntakeSwipeDown(gesture:UIGestureRecognizer){
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            switch swipeGesture.direction {
+                
+            case UISwipeGestureRecognizerDirection.Down:
+                print("Swiped down")
+                
+                self.blackTransparentOverView.removeFromSuperview()
+                UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+                    self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+                    }, completion: { finished in
+                        print("Intake logpop closed!")
+                })
+                
+            default:
+                break
+                
+            }
+        }
+        
+        
+        
+
+    }
+    
+    func respondToDeviceSwipeDown(gesture:UIGestureRecognizer){
+        self.blackTransparentOverView.removeFromSuperview()
+        UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+            self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+            }, completion: { finished in
+                print("Intake logpop closed!")
+                //                    self.intakeLogViewPopUp.removeFromSuperview()
+        })
+    }
+    
+    
     func setupIntakeLogPopUPView()  {
         intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.6)
         intakeLogViewPopUp.backgroundColor = Constants.AppColors.popBackgroundColor
@@ -559,6 +622,10 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         self.view.bringSubviewToFront(self.intakeLogViewPopUp)
         
+        
+        let swipedownIntake = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.respondToIntakeSwipeDown(_:)))
+        swipedownIntake.direction = UISwipeGestureRecognizerDirection.Down
+        intakeLogViewPopUp.addGestureRecognizer(swipedownIntake)
         
         //image view
         mealPhotoImage = UIImage(named: "")
@@ -837,29 +904,34 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         if foodTypePickerTextfield.text != "" && intakeTitleTextfield.text != "" && emojiLevel != nil && mealPhotoImage != nil && intakeTimeTextfield.text != ""{
             let imageData = UIImagePNGRepresentation(mealPhotoImage)
             let base64String = imageData!.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
-            if DataService.ds.postIntake(defaults.valueForKey("username") as! String, foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!) == true{
-                print("log success")
-            }else{
-                print("log unsuccessful")
-                displayAlertMessage("Log unsuccessful", alertDescription: "Something is broken ... sorry")
-            }
             
-            blackTransparentOverView.removeFromSuperview()
-            UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
-                self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
-                }, completion: { finished in
-                    print("Intake logpop closed!")
-//                    self.intakeLogViewPopUp.removeFromSuperview()
+            postIntake(defaults.valueForKey("username") as! String, foodType: foodTypePickerTextfield.text!, foodTitle: intakeTitleTextfield.text!, score: emojiLevel, grams: 0, picture: base64String, timeStamp: intakeTimeTextfield.text!, completionHandler:{(UIBackgroundFetchResult) -> Void in
+                
+                print("success")
+                
+                self.blackTransparentOverView.removeFromSuperview()
+                UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+                    self.intakeLogViewPopUp.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+                    }, completion: { finished in
+                        print("Intake logpop closed!")
+                        //                    self.intakeLogViewPopUp.removeFromSuperview()
+                })
+                
+                
+                // refresh fields
+                self.foodTypePickerTextfield.text = nil
+                self.intakeTimeTextfield.text = nil
+                self.emojiLevel = nil
+                self.mealPhotoImage = nil
+                self.addIntakeButtonImage = UIImage(named: "noPhoto")
+                self.intakeTimeTextfield.text = nil
+                
+                self.progressHUD.removeFromSuperview()
+
+                
             })
+
             
-            
-            // refresh fields
-            foodTypePickerTextfield.text = nil
-            intakeTimeTextfield.text = nil
-            emojiLevel = nil
-            mealPhotoImage = nil
-            addIntakeButtonImage = UIImage(named: "noPhoto")
-            intakeTimeTextfield.text = nil
         }else{
             print("missing content for log")
             displayAlertMessage("Oooppss incomplete log", alertDescription: "You have to fill in all fields before submitting")
@@ -868,6 +940,89 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         
         
        
+    }
+    
+    func postIntake(userName:String,foodType:String,foodTitle:String,score:Int,grams:Int,picture:String,timeStamp:String,completionHandler:((UIBackgroundFetchResult) -> Void)!){
+        
+        progressHUD = ProgressHUD(text: "Submitting...")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
+        
+        
+        let data = [
+            "user_name" :userName,
+            "food_type" :foodType,
+            "title" :foodTitle,
+            "score" : score,
+            "grams" : grams,
+            "picture" : picture,
+            "timestamp" : timeStamp
+        ]
+        
+        Alamofire.request(.POST, "https://nott.herokuapp.com/" + "food", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                switch response.result {
+                case .Success(_):
+                    print("submit success")
+                    completionHandler(UIBackgroundFetchResult.NewData)
+                case .Failure(let error):
+                    print("Request failed with error : \(error)")
+                }
+        }
+        
+    }
+    
+    func submitDeviceLogButtonPressed(){
+        
+        if deviceStartTimeTextField.text != "" && deviceEndTimeTextField.text != ""{
+            
+            postActivity(defaults.valueForKey("username") as! String, startTime: deviceStartTimeTextField.text!, endTime: deviceEndTimeTextField.text!, type: deviceToLog, completionHandler: {(UIBackgroundFetchResult) -> Void in
+
+                self.blackTransparentOverView.removeFromSuperview()
+                UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
+                    self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
+                    }, completion: { finished in
+                })
+            })
+    
+            deviceStartTimeTextField.text = ""
+            deviceEndTimeTextField.text = ""
+            deviceToLog = ""
+            
+            self.progressHUD.removeFromSuperview()
+
+        }else{
+            displayAlertMessage("Ooopppsss incomplete log", alertDescription: "make sure you fill out both fields")
+        }
+        
+        
+    }
+    
+    func postActivity(userName:String,startTime:String,endTime:String,type:String,completionHandler:((UIBackgroundFetchResult) -> Void)!){
+        
+        progressHUD = ProgressHUD(text: "Submitting...")
+        self.view.addSubview(progressHUD)
+        self.view.bringSubviewToFront(progressHUD)
+        
+        let data = [
+            "user_name" : userName,
+            "activity_type" : type,
+            "start_time" : startTime,
+            "end_time" : endTime
+        ]
+        
+        
+        Alamofire.request(.POST, "https://nott.herokuapp.com/" + "activity", parameters:data , encoding: .JSON)
+            .responseJSON { response in
+                switch response.result {
+                case .Success(_):
+                    print("submit success")
+                    completionHandler(UIBackgroundFetchResult.NewData)
+                case .Failure(let error):
+                    print("Request failed with error : \(error)")
+                }
+        }
+        
     }
     
     func displayAlertMessage(alertTitle:String, alertDescription:String) -> Void {
@@ -916,6 +1071,10 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         self.view.addSubview(self.deviceLogViewPopUP)
         
         self.view.bringSubviewToFront(self.deviceLogViewPopUP)
+        
+        let swipedownDevice = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.respondToDeviceSwipeDown(_:)))
+        swipedownDevice.direction = UISwipeGestureRecognizerDirection.Down
+        intakeLogViewPopUp.addGestureRecognizer(swipedownDevice)
         
         //image view
         deviceImageView.layer.cornerRadius = view.frame.size.height*0.2 / 2
@@ -1237,25 +1396,7 @@ class ViewController: UIViewController,UIImagePickerControllerDelegate,UIPickerV
         intakeTimeTextfield.text = dateFormatter.stringFromDate(sender.date)
     }
     
-    func submitDeviceLogButtonPressed(){
-        
-        if deviceStartTimeTextField.text != "" && deviceEndTimeTextField.text != ""{
-            DataService.ds.postActivity(defaults.valueForKey("username") as! String, startTime: deviceStartTimeTextField.text!, endTime: deviceEndTimeTextField.text!, type: deviceToLog)
-            blackTransparentOverView.removeFromSuperview()
-            UIView.animateWithDuration(0.1, delay: 0.0, options: .CurveEaseIn, animations: {
-                self.deviceLogViewPopUP.frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, self.view.frame.size.height*0.4)
-                }, completion: { finished in
-            })
-            
-            deviceStartTimeTextField.text = ""
-            deviceEndTimeTextField.text = ""
-            deviceToLog = ""
-        }else{
-            displayAlertMessage("Ooopppsss incomplete log", alertDescription: "make sure you fill out both fields")
-        }
-        
 
-    }
 
     func cancelDeviceButtonPressed(){
         blackTransparentOverView.removeFromSuperview()

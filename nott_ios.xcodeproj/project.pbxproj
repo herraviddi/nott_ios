@@ -67,7 +67,6 @@
 			children = (
 				79C56EFA1CBE85C500BC0AB1 /* LoginAppViewController.swift */,
 				79EA6D471CABFFE800610112 /* ViewController.swift */,
-				79FB11DB1CC2BF3000521E9C /* ProgressHUD.swift */,
 				79C56EF81CBE805400BC0AB1 /* StatsViewController.swift */,
 			);
 			name = ViewControllers;
@@ -102,11 +101,11 @@
 		79EA6D441CABFFE800610112 /* nott_ios */ = {
 			isa = PBXGroup;
 			children = (
+				79EA6D451CABFFE800610112 /* AppDelegate.swift */,
+				79FB11DD1CC3C28300521E9C /* CustomViews */,
 				79366B741CB286070002B88D /* CustomCells */,
 				794944C01CAC106A00C65484 /* Services */,
 				794944BF1CAC105200C65484 /* ViewControllers */,
-				79EA6D451CABFFE800610112 /* AppDelegate.swift */,
-				794944C51CAC581A00C65484 /* CircleDiagram.swift */,
 				794944BD1CAC0E0900C65484 /* Constants.swift */,
 				79EA6D491CABFFE800610112 /* Main.storyboard */,
 				79EA6D4C1CABFFE800610112 /* Assets.xcassets */,
@@ -114,6 +113,15 @@
 				79EA6D511CABFFE800610112 /* Info.plist */,
 			);
 			path = nott_ios;
+			sourceTree = "<group>";
+		};
+		79FB11DD1CC3C28300521E9C /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				79FB11DB1CC2BF3000521E9C /* ProgressHUD.swift */,
+				794944C51CAC581A00C65484 /* CircleDiagram.swift */,
+			);
+			name = CustomViews;
 			sourceTree = "<group>";
 		};
 		9E90F74F7AF8E0BB2AEE2ACD /* Pods */ = {
@@ -169,6 +177,11 @@
 					79EA6D411CABFFE800610112 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 28P5V2HH92;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -384,7 +397,7 @@
 				INFOPLIST_FILE = nott_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hideoutapps.nott;
 				PRODUCT_NAME = "Nótt";
 			};
 			name = Debug;
@@ -402,7 +415,7 @@
 				INFOPLIST_FILE = nott_ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.hideout.nott;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hideoutapps.nott;
 				PRODUCT_NAME = "Nótt";
 			};
 			name = Release;

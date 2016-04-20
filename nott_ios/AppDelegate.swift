@@ -8,6 +8,7 @@
 
 import UIKit
 import HockeySDK
+import AeroGearPush
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -43,9 +44,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         BITHockeyManager.sharedHockeyManager().startManager()
         BITHockeyManager.sharedHockeyManager().authenticator.authenticateInstallation()
 
+        
+        // Push Notifications
+        let notificationTypes: UIUserNotificationType = [UIUserNotificationType.Alert,UIUserNotificationType.Badge,UIUserNotificationType.Sound]
+        let pushNotificationSettings = UIUserNotificationSettings(forTypes: notificationTypes, categories: nil)
+        application.registerUserNotificationSettings(pushNotificationSettings)
+        application.registerForRemoteNotifications()
+        
+        
         return true
     }
+    
+    // MARK: - PUSH NOTIFICATIONS
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print(error)
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        print("APNS Success")
+        
+        let registration = AGDeviceRegistration(serverURL: NSURL(string: "https://aerogear2-hideoutapps.rhcloud.com/ag-push/")!)
 
+        
+        registration.registerWithClientInfo({ (clientInfo: AGClientDeviceInformation!)  in
+            
+            // apply the token, to identify this device
+            clientInfo.deviceToken = deviceToken
+            print(deviceToken)
+            
+            clientInfo.variantID = "77a37c2e-b9ae-4314-aadd-dd24663af2e1"
+            clientInfo.variantSecret = "e2d86ebd-c888-42f4-8248-e0f46a579a0e"
+            
+            // --optional config--
+            // set some 'useful' hardware information params
+            let currentDevice = UIDevice()
+            clientInfo.operatingSystem = currentDevice.systemName
+            clientInfo.osVersion = currentDevice.systemVersion
+            clientInfo.deviceType = currentDevice.model
+            
+            }, success: {
+                print("UPS registration worked");
+                
+            }, failure: { (error:NSError!) -> () in
+                print("UPS registration Error: \(error.localizedDescription)")
+        })
+    }
+
+    
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

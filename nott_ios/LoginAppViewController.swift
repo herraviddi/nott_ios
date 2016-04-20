@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AeroGearPush
 
 class LoginAppViewController: UIViewController,UITextFieldDelegate {
 
@@ -26,6 +27,10 @@ class LoginAppViewController: UIViewController,UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+
+        
         self.navigationController?.navigationBarHidden = true
         view.backgroundColor = Constants.AppColors.appRedColor
         
@@ -78,11 +83,17 @@ class LoginAppViewController: UIViewController,UITextFieldDelegate {
 
         self.view.addSubview(enterAppButton)
         // Do any additional setup after loading the view.
+        
+
+        
     }
     
     func enterAppButtonPressed(){
         
-
+//        let deviceToken = self.defaults.valueForKey("userDeviceToken") as! NSData
+//        
+//        self.registerDeviceToken(deviceToken)
+        
         defaults.setValue(nameTextField.text, forKey: "username")
         defaults.setValue(1, forKey: "loggedIn")
         let appVC = ViewController()
@@ -90,6 +101,34 @@ class LoginAppViewController: UIViewController,UITextFieldDelegate {
         
     }
     
+    
+//    func registerDeviceToken(deviceToken:NSData){
+//        let registration = AGDeviceRegistration(serverURL: NSURL(string: "https://aerogear2-hideoutapps.rhcloud.com/ag-push/")!)
+//
+//        
+//        registration.registerWithClientInfo({ (clientInfo: AGClientDeviceInformation!)  in
+//            
+//            // apply the token, to identify this device
+//            clientInfo.deviceToken = deviceToken
+////            clientInfo.alias = userID //User id
+//            
+//            clientInfo.variantID = "2be5381f-d5b1-4486-9630-61c2d2e5665d"
+//            clientInfo.variantSecret = "64b701b1-eb67-4c83-b290-0f3219741fe6"
+//            
+//            // --optional config--
+//            // set some 'useful' hardware information params
+//            let currentDevice = UIDevice()
+//            clientInfo.operatingSystem = currentDevice.systemName
+//            clientInfo.osVersion = currentDevice.systemVersion
+//            clientInfo.deviceType = currentDevice.model
+//            
+//            }, success: {
+//                print("UPS registration worked");
+//                
+//            }, failure: { (error:NSError!) -> () in
+//                print("UPS registration Error: \(error.localizedDescription)")
+//        })
+//    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?)  {
         //Hide the keyboard

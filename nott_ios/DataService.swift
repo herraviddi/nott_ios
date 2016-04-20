@@ -30,82 +30,7 @@ class DataService{
     
     // TODO login/signup
     
-    
-    func postIntake(userName:String,foodType:String,foodTitle:String,score:Int,grams:Int,picture:String,timeStamp:String) -> Bool{
-        
-        var returnBool = false
-        
-        let data = [
-            "user_name" :userName,
-            "food_type" :foodType,
-            "title" :foodTitle,
-            "score" : score,
-            "grams" : grams,
-            "picture" : picture,
-            "timestamp" : timeStamp
-        ]
-        
-        Alamofire.request(.POST, BASE_URL + "food", parameters:data as? [String : AnyObject] , encoding: .JSON)
-            .responseJSON { response in
-//                print(response.result.description)
-                if response.result.isSuccess {
-//                    print(response.result.value)
-                    if response.response?.statusCode == 400{
-                        print("error 400")
-                    }else{
-                        print("send activity success")
-                        returnBool = true
-                    }
-                }else{
-                    print("error in post activity dataservice")
-                }
-        }
 
-        return returnBool
-    }
-    
-    func postActivity(userName:String,startTime:String,endTime:String,type:String){
-        
-        let data = [
-            "user_name" : userName,
-            "activity_type" : type,
-            "start_time" : startTime,
-            "end_time" : endTime
-        ]
-        
-        
-        Alamofire.request(.POST, BASE_URL + "activity", parameters:data , encoding: .JSON)
-            .responseJSON { response in
-                if response.result.isSuccess {
-                    if response.response?.statusCode == 400{
-                        print("error 400")
-                    }else{
-                        print("send activity success")
-                    }
-                }else{
-                    print("error in post activity dataservice")
-                }
-        }
-    
-    }
-
-
-    
-    func getFrequentFood(username:String) -> NSMutableArray{
-        let getURL = BASE_URL + "get_frequent_food?user_name=" + username
-        
-        self.foodListArray = []
-        Alamofire.request(.GET,getURL , parameters: nil)
-            .responseJSON { response in
-//                print(response.result.value)
-                if let JSON = response.result.value {
-                    self.foodListArray.addObject(JSON)
-                }
-        }
-        
-        return foodListArray
-        
-    }
     
     func getUserSleepQualityHistory(username:String) -> NSMutableArray{
         let sleepQArray = NSMutableArray()
@@ -124,25 +49,130 @@ class DataService{
         return sleepQArray
     }
     
-    func getUserTimeLine(username:String, datestr:String) -> NSMutableArray{
-        let dayTimeLine = NSMutableArray()
-        //https://nott.herokuapp.com/get_timeline_for_day?user_name=rakel&date_str=2016-04-11
-//        let datestr = "2016-04-15" 
-        let getURL = BASE_URL + "get_timeline_for_day?user_name=" + username + "&date_str=" + datestr
+    
+    
+    func getSleepData(username:String,datestr:String) -> NSMutableArray{
+        let sleep_data = NSMutableArray()
+        let getURL = BASE_URL + "get_sleep_data_for_day?user_name=" + username + "&date_str=" + datestr
         
         Alamofire.request(.GET,getURL , parameters: nil)
             .responseJSON { response in
-//                print(response.result.value)
                 if let JSON = response.result.value {
-                    dayTimeLine.addObject(JSON)
+                    sleep_data.addObject(JSON)
                 }
         }
         
-        return dayTimeLine
+        return sleep_data
     }
     
     
+    func editActivity(username:String,activity_id:Int,activity_type:String,start_time:String,end_time:String){
+        let data = [
+            "user_name" : username,
+            "activity_id" : activity_id,
+            "activity_type" : activity_type,
+            "start_time" : start_time,
+            "end_time" : end_time
+        ]
+        
+        
+        
+        Alamofire.request(.POST, BASE_URL + "edit_activity", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                if response.result.isSuccess {
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("edit activity success")
+                    }
+                }else{
+                    print("error in post activity dataservice")
+                }
+        }
+    }
     
+    func edit_food(username:String,food_id:Int,food_type:String,title:String,score:Int,grams:Int,picture:String,timestamp:String){
+        
+    
+     
+        let data = [
+            "user_name" :username,
+            "food_id" : food_id,
+            "food_type" :food_type,
+            "title" :title,
+            "score" : score,
+            "grams" : grams,
+            "picture" : picture,
+            "timestamp" : timestamp
+        ]
+        
+        print(data)
+        Alamofire.request(.POST, BASE_URL + "edit_food", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                //                print(response.result.description)
+                if response.result.isSuccess {
+                                        print(response.result.value)
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("send activity success")
+                    }
+                }else{
+                    print("error in post activity dataservice")
+                }
+        }
+    }
+    
+    func delete_food(username:String,food_id:Int){
+        let data = [
+            "user_name" : username,
+            "food_id" : food_id
+        ]
+        
+        print(data)
+        
+        Alamofire.request(.POST, BASE_URL + "delete_food", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                //                print(response.result.description)
+                if response.result.isSuccess {
+                    print(response.result.value)
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("send activity success")
+                    }
+                }else{
+                    print("error in post activity dataservice")
+                }
+        }
+        
+    }
+    
+    func delete_activity(username:String,activity_id:Int){
+        let data = [
+            "user_name" : username,
+            "activity_id" : activity_id
+        ]
+        
+        print(data)
+        
+        Alamofire.request(.POST, BASE_URL + "delete_activity", parameters:data as? [String : AnyObject] , encoding: .JSON)
+            .responseJSON { response in
+                //                print(response.result.description)
+                if response.result.isSuccess {
+                    print(response.result.value)
+                    if response.response?.statusCode == 400{
+                        print("error 400")
+                    }else{
+                        print("send activity success")
+                    }
+                }else{
+                    print("error in post activity dataservice")
+                }
+        }
+        
+    }
+
     
 
 }
